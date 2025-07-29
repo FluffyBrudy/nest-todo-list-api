@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -18,16 +19,16 @@ export class TodoController {
   private readonly logger = new Logger(TodoController.name);
   constructor(private readonly todoService: TodoService) {}
 
-  @Get()
-  findAll(): Todo[] {
-    this.logger.log('Handling findall request');
-    return this.todoService.findall();
-  }
-
   @Post()
   create(@Body() todo: Todo) {
     this.logger.log('Handling create() request');
     return this.todoService.create(todo);
+  }
+
+  @Get()
+  findAll(): Todo[] {
+    this.logger.log('Handling findall request');
+    return this.todoService.findall();
   }
 
   @Put(':id')
@@ -47,5 +48,12 @@ export class TodoController {
       'handling findone request. {id}=' + id + '. typeof id=' + typeof id,
     );
     return this.todoService.findone(id);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    this.logger.log('handling remove() request with id=' + id + '...');
+    const status = this.todoService.remove(id);
+    res.status(status).json({});
   }
 }
