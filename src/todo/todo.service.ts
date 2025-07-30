@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Todo } from './todo.interface';
+import { SharedService } from 'src/shared/shared.service';
 
 @Injectable()
 export class TodoService {
+  constructor(private readonly sharedService: SharedService) {}
+
   private storage: Todo[] = [
     {
       id: 0,
